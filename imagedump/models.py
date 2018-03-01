@@ -7,7 +7,7 @@ from papillon_user.models import PapillonUser
 
 def image_save_location(instance, filename):
     del filename  # Unused, we use the uuid instead
-    return os.path.join(settings.UPLOAD_DIR, instance.uuid)
+    return os.path.join(settings.UPLOAD_DIR, str(instance.uuid))
 
 
 class Image(models.Model):
@@ -25,7 +25,8 @@ class Image(models.Model):
     # Image's uploader (or null)
     uploader = models.ForeignKey(PapillonUser,
                                  on_delete=models.SET_NULL,
-                                 null=True)
+                                 null=True,
+                                 blank=True)
 
     # Upload date of the image
     upload_date = models.DateTimeField()

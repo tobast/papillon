@@ -1,9 +1,16 @@
+import mimetypes
+import os
+
+from django.conf import settings
 from django.views.generic import View
 from django.views.generic.base import ContextMixin, TemplateResponseMixin
 from django.utils import timezone
+from django.http import Http404, FileResponse
+from django.shortcuts import get_object_or_404
 
 from papillon_user.models import get_papillon_user
 from .forms import ImageForm
+from .models import Image
 
 
 class UploadImageView(ContextMixin, TemplateResponseMixin, View):
@@ -34,11 +41,41 @@ class UploadImageView(ContextMixin, TemplateResponseMixin, View):
         return self.render_to_response(self.get_context_data())
 
     def get_context_data(self, **kwargs):
-        partial_form = kwargs['partial_form']
-
         context = super().get_context_data(**kwargs)
+        try:
+            partial_form = kwargs['partial_form']
+        except KeyError:
+            partial_form = None
+
         if partial_form:
             context['upload_form'] = partial_form
         else:
             context['upload_form'] = ImageForm()
         return context
+
+
+class ServeImageView(View):
+    ''' Serve a stored image
+
+    This is served by Django, even though this is Bad for performance reasons,
+    yet the decryption has to happen in Django '''
+
+    def get(self, request, uuid, ext):
+        image = get_object_or_404(Image, uuid=uuid)
+
+        mimetype = mimetypes.guess_type('placeholder.{}'.format(ext))[0]
+        if mimetype is None:
+            mimetype = 'application/octet-stream'
+        else:
+            if not mimetype.startswith('image/'):
+                raise Http404
+
+        disk_path = os.path.join(settings.MEDIA_ROOT, image.image.name)
+        try:
+            resp = FileResponse(open(disk_path, 'rb'))
+            resp['Content-Type'] = mimetype
+            return resp
+        except FileNotFoundError:
+            raise Http404
+        except PermissionError:
+            raise Http404
