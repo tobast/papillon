@@ -1,0 +1,21 @@
+<!-- vim: ft=htmldjango
+-->
+
+{% extends "base.html" %}
+
+{% block title %}
+{{ image.title }} — Papillon
+{% endblock title %}
+
+{% block content %}
+<h1>{{ image.title }}</h1>
+
+<div class="image-info">
+  Uploaded by {{ image.uploader }}, {{ image.upload_date | date:"Y-M-d" }}
+</div>
+<div class="image">
+  <a href="{{ raw_url }}">
+    <img src="{{ raw_url }}" alt="Image" />
+  </a>
+</div>
+{% endblock content %}

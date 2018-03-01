@@ -2,6 +2,7 @@ import uuid
 import os
 from django.conf import settings
 from django.db import models
+from django.urls import reverse
 from papillon_user.models import PapillonUser
 
 
@@ -30,3 +31,17 @@ class Image(models.Model):
 
     # Upload date of the image
     upload_date = models.DateTimeField()
+
+    def raw_url(self, ext):
+        ''' Get the image's raw display url '''
+        return reverse('raw_image', kwargs={
+            'uuid': str(self.uuid),
+            'ext': ext,
+        })
+
+    def show_url(self, ext):
+        ''' Get the image's decorated display url '''
+        return reverse('show_image', kwargs={
+            'uuid': str(self.uuid),
+            'ext': ext,
+        })

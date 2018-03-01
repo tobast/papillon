@@ -2,7 +2,7 @@ import mimetypes
 import os
 
 from django.conf import settings
-from django.views.generic import View
+from django.views.generic import View, TemplateView
 from django.views.generic.base import ContextMixin, TemplateResponseMixin
 from django.utils import timezone
 from django.http import Http404, FileResponse
@@ -51,6 +51,20 @@ class UploadImageView(ContextMixin, TemplateResponseMixin, View):
             context['upload_form'] = partial_form
         else:
             context['upload_form'] = ImageForm()
+        return context
+
+
+class ShowImageView(TemplateView):
+    ''' Show an image and its metadata '''
+    template_name = 'imagedump/show_image.html'
+
+    def get_context_data(self, uuid, ext, **kwargs):
+        context = super().get_context_data(**kwargs)
+        image = get_object_or_404(Image, uuid=uuid)
+
+        context['image'] = image
+        context['raw_url'] = image.raw_url(ext)
+
         return context
 
 
