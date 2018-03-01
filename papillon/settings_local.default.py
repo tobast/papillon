@@ -27,4 +27,10 @@ DATABASES = {
 TIME_ZONE = 'UTC'
 
 # Static files' directory
-STATIC_DIR = os.path.join(PUBLIC_DIR, 'static')
+STATIC_ROOT = os.path.join(PUBLIC_DIR, 'static')
+
+# Media directory
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# Sub-directroy of MEDIA_DIR in which the upload will be saved
+UPLOAD_DIR = os.path.join('private', 'uploads')

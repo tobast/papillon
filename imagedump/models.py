@@ -1,11 +1,31 @@
+import uuid
+import os
+from django.conf import settings
 from django.db import models
 from papillon_user.models import PapillonUser
 
 
+def image_save_location(instance, filename):
+    del filename  # Unused, we use the uuid instead
+    return os.path.join(settings.UPLOAD_DIR, instance.uuid)
+
+
 class Image(models.Model):
-    path = models.CharField(max_length=1024,
-                            unique=True)
+    # Unique identifier of the image, used in URLs
+    uuid = models.UUIDField(primary_key=True,
+                            default=uuid.uuid4,
+                            editable=False)
+
+    # On-disk path of the image
+    image = models.ImageField(upload_to=image_save_location)
+
+    # Displayed title
+    title = models.CharField(max_length=512)
+
+    # Image's uploader (or null)
     uploader = models.ForeignKey(PapillonUser,
                                  on_delete=models.SET_NULL,
                                  null=True)
+
+    # Upload date of the image
     upload_date = models.DateTimeField()

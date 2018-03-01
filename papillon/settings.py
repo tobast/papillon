@@ -16,8 +16,10 @@ from .settings_local import (
     DEBUG,
     ALLOWED_HOSTS,
     DATABASES,
-    STATIC_DIR,
+    STATIC_ROOT,
     TIME_ZONE,
+    MEDIA_ROOT,
+    UPLOAD_DIR,
 )
 
 # Application definition
