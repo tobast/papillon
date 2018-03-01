@@ -1,0 +1,21 @@
+<!-- vim: ft=htmldjango
+-->
+
+{% extends "base.html" %}
+
+{% block title %}
+Login — Papillon
+{% endblock title %}
+
+{% block content %}
+<h1>Authentication</h1>
+
+<form action="{% url "login" %}" method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+
+  <input type="hidden" name="next" value="{{ next }}" />
+  <input type="submit" value="Login" />
+</form>
+
+{% endblock content %}
