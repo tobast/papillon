@@ -50,7 +50,7 @@ ROOT_URLCONF = 'papillon.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['papillon/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

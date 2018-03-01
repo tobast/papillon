@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class PapillonUser(models.Model):
@@ -7,3 +8,13 @@ class PapillonUser(models.Model):
     django_user = models.OneToOneField(settings.AUTH_USER_MODEL,
                                        on_delete=models.CASCADE,
                                        primary_key=True)
+
+
+def get_papillon_user(user):
+    if not user.is_authenticated:
+        return None
+    else:
+        try:
+            return user.papillonuser
+        except ObjectDoesNotExist:
+            return None  # No papillon user associated
