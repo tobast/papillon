@@ -29,6 +29,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'papillon_user',
+    'imagedump',
 ]
 
 MIDDLEWARE = [
