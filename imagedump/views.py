@@ -6,7 +6,7 @@ from django.views.generic import View, TemplateView
 from django.views.generic.base import ContextMixin, TemplateResponseMixin
 from django.utils import timezone
 from django.http import Http404, FileResponse
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 
 from papillon_user.models import get_papillon_user
 from .forms import ImageForm
@@ -22,6 +22,11 @@ class UploadImageView(ContextMixin, TemplateResponseMixin, View):
         form = ImageForm(request.POST, request.FILES)
 
         if form.is_valid():
+            extension = os.path.splitext(request.FILES['image'].name)[1]
+            if extension.startswith('.'):
+                extension = extension[1:]
+            # ^ This is not empty because the field has been cleaned
+
             image = form.save(commit=False)
             image.uploader = get_papillon_user(request.user)
             image.upload_date = timezone.now()
@@ -29,8 +34,7 @@ class UploadImageView(ContextMixin, TemplateResponseMixin, View):
             # ^ Will fail with 500 upon error -- this is what we want here
             image.save()
 
-            # TODO redirect to image view
-            return self.render_to_response(self.get_context_data())
+            return redirect(image.show_url(extension))
 
         # ...upon error, show the form again (with errors)
         return self.render_to_response(
