@@ -7,8 +7,13 @@
 
     <link rel="stylesheet" href="/static/css/base_style.css">
   </head>
-
   <body>
+    <header>
+      <div class="brand">Papillon</div>
+      <div id="authbox">
+        {% include "authbox.html" %}
+      </div>
+    </header>
     <div class="content">
       {% block content %}
       {% endblock content %}

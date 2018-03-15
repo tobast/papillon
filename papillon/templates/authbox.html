@@ -1,0 +1,9 @@
+<!-- vim: ft=htmldjango
+-->
+
+{% if user.is_authenticated %}
+
+<p class="username">{{ user }}</p>
+<p class="logout-btn"><a href="{% url "logout" %}">Log out</a></p>
+
+{% endif %}
